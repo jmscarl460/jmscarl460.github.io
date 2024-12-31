@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jmscarl - Mobile</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .breadcrumb a {
+            color: #3182ce;
+            text-decoration: none;
+            margin-right: 8px;
+        }
+
+        .breadcrumb span {
+            margin-right: 8px;
+            color: #4a5568;
+        }
+
+        .countdown {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 10;
+            background-color: #1E40AF;
+            color: white;
+            padding: 16px;
+        }
+    </style>
+
+    <script>
+        // Countdown to New Year
+        function updateCountdown() {
+            const newYear = new Date("January 1, 2025 00:00:00").getTime(); // New Year timestamp
+            const now = new Date().getTime();
+            const timeRemaining = newYear - now;
+
+            if (timeRemaining <= 0) {
+                document.getElementById('countdown').innerHTML = "Happy New Year!";
+                return;
+            }
+
+            const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+            document.getElementById('countdown').innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        }
+
+        setInterval(updateCountdown, 1000);
+    </script>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Navbar for Mobile -->
+    <nav class="navbar">
+        <div class="flex justify-between items-center">
+            <a href="#" class="text-xl font-bold">jmscarl</a>
+            <div class="flex space-x-4">
+                <a href="#" class="text-white">
+                    <i class="fas fa-home"></i>
+                </a>
+                <a href="#" class="text-white">
+                    <i class="fas fa-info-circle"></i>
+                </a>
+                <a href="#" class="text-white">
+                    <i class="fas fa-cogs"></i>
+                </a>
+                <a href="#" class="text-white">
+                    <i class="fas fa-envelope"></i>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumbs -->
+    <div class="mt-16 px-4 py-2">
+        <div class="breadcrumb text-gray-600">
+            <a href="#">Home</a>
+            <span>/</span>
+            <a href="#">Software Solutions</a>
+            <span>/</span>
+            <span>jmscarl</span>
+        </div>
+    </div>
+
+    <!-- Countdown Section -->
+    <section class="text-center py-16">
+        <h1 class="text-2xl font-bold mb-4">New Year Countdown</h1>
+        <div id="countdown" class="countdown mb-6">
+            <!-- Countdown will appear here -->
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-blue-600 text-white py-4 text-center">
+        <p>&copy; 2024 jmscarl - All Rights Reserved</p>
+    </footer>
+
+</body>
+</html>
