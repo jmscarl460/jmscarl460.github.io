@@ -11,6 +11,12 @@
     <!-- Google Fonts: Poppins -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     
+    <!-- Font Awesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+    <!-- Fireworks JS -->
+    <script src="https://cdn.jsdelivr.net/npm/fireworks-js"></script>
+
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -33,6 +39,34 @@
         footer {
             margin-top: 60px;
         }
+
+        #fireworks {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #happy-message {
+            font-size: 2rem;
+            color: white;
+            text-align: center;
+            margin-top: 50px;
+            display: none;
+        }
+
+        /* Mobile-specific styles for breadcrumbs */
+        @media (max-width: 768px) {
+            .breadcrumb {
+                display: flex;
+                flex-direction: column;
+                text-align: center;
+                font-size: 14px;
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -42,10 +76,18 @@
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <a href="#" class="text-2xl font-bold">jmscarl</a>
             <div class="flex space-x-6">
-                <a href="#" class="hover:text-gray-300">Home</a>
-                <a href="#" class="hover:text-gray-300">About</a>
-                <a href="#" class="hover:text-gray-300">Services</a>
-                <a href="#" class="hover:text-gray-300">Contact</a>
+                <a href="#" class="hover:text-gray-300 flex items-center">
+                    <i class="fas fa-home mr-2"></i> Home
+                </a>
+                <a href="#" class="hover:text-gray-300 flex items-center">
+                    <i class="fas fa-info-circle mr-2"></i> About
+                </a>
+                <a href="#" class="hover:text-gray-300 flex items-center">
+                    <i class="fas fa-cogs mr-2"></i> Services
+                </a>
+                <a href="#" class="hover:text-gray-300 flex items-center">
+                    <i class="fas fa-envelope mr-2"></i> Contact
+                </a>
             </div>
         </div>
     </nav>
@@ -53,7 +95,7 @@
     <!-- Breadcrumbs -->
     <div class="mt-16 bg-gray-200 py-2 px-4">
         <div class="max-w-7xl mx-auto text-gray-600">
-            <nav class="flex items-center space-x-2 text-sm">
+            <nav class="breadcrumb flex items-center space-x-2 text-sm">
                 <a href="#" class="text-blue-600">Home</a>
                 <span>/</span>
                 <a href="#" class="text-blue-600">Software Solutions</a>
@@ -64,13 +106,22 @@
     </div>
 
     <!-- Hero Section with New Year Countdown -->
-    <section class="bg-blue-600 text-white py-16 text-center">
+    <section class="bg-blue-600 text-white py-16 text-center relative">
         <h1 class="text-4xl font-bold mb-4">Welcome to jmscarl</h1>
         <p class="text-xl mb-6">Innovative software solutions for businesses and individuals</p>
         <div id="countdown" class="time mb-6">
             <!-- Countdown will appear here -->
         </div>
         <a href="#services" class="bg-white text-blue-600 py-2 px-6 rounded-full text-lg">Explore Our Services</a>
+
+        <!-- Fireworks Container -->
+        <div id="fireworks"></div>
+        
+        <!-- Happy New Year Message -->
+        <div id="happy-message">
+            <div id="country-message"></div>
+            <p>🎉 Wishing you a prosperous and successful year ahead! 🎆</p>
+        </div>
     </section>
 
     <!-- Services Section -->
@@ -119,6 +170,9 @@
 
             if (timeRemaining <= 0) {
                 document.getElementById('countdown').innerHTML = "Happy New Year!";
+                document.getElementById('happy-message').style.display = "block";
+                startFireworks();
+                displayCountryMessage();
                 return;
             }
 
@@ -132,6 +186,29 @@
             document.getElementById('countdown').innerHTML = `
                 ${days}d ${hours}h ${minutes}m ${seconds}s
             `;
+        }
+
+        // Start fireworks effect
+        function startFireworks() {
+            const fireworks = new Fireworks.default();
+            fireworks.start();
+        }
+
+        // Display Happy New Year message based on the country
+        function displayCountryMessage() {
+            const countries = {
+                "US": "Happy New Year!",
+                "PH": "Maligayang Bagong Taon!",
+                "ES": "¡Feliz Año Nuevo!",
+                "FR": "Bonne année!",
+                "DE": "Frohes Neues Jahr!",
+                "IT": "Buon Anno!"
+            };
+
+            const userCountry = "US"; // Change this or use geolocation to dynamically set the country
+            const message = countries[userCountry] || "Happy New Year!";
+
+            document.getElementById('country-message').innerText = message;
         }
 
         // Update the countdown every second
