@@ -4,27 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>jmscarl - Software Company</title>
-    
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
     <!-- Google Fonts: Poppins -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    
+
     <!-- Font Awesome Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-
-    <!-- Fireworks JS -->
-    <script src="https://cdn.jsdelivr.net/npm/fireworks-js"></script>
 
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-        }
-        .time {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-            font-size: 3rem;
-            font-weight: bold;
         }
 
         .navbar {
@@ -33,41 +25,54 @@
             left: 0;
             width: 100%;
             z-index: 10;
-            transition: top 0.3s;
         }
 
         footer {
             margin-top: 60px;
         }
 
-        #fireworks {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            opacity: 0;
-            pointer-events: none;
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
         }
 
-        #happy-message {
-            font-size: 2rem;
-            color: white;
-            text-align: center;
-            margin-top: 50px;
-            display: none;
+        .breadcrumb a {
+            color: #3182ce;
+            text-decoration: none;
+            margin-right: 8px;
         }
 
-        /* Mobile-specific styles for breadcrumbs */
+        .breadcrumb span {
+            margin-right: 8px;
+            color: #4a5568;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .countdown {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+            font-size: 3rem;
+            font-weight: bold;
+        }
+
+        /* Mobile Adjustments */
         @media (max-width: 768px) {
             .breadcrumb {
-                display: flex;
                 flex-direction: column;
-                text-align: center;
-                font-size: 14px;
+                align-items: center;
             }
         }
     </style>
+
+    <script>
+        // Redirect to mobile version if screen size is less than or equal to 768px
+        if (window.innerWidth <= 768) {
+            window.location.href = '/mobile';
+        }
+    </script>
 </head>
 <body class="bg-gray-100">
 
@@ -95,10 +100,10 @@
     <!-- Breadcrumbs -->
     <div class="mt-16 bg-gray-200 py-2 px-4">
         <div class="max-w-7xl mx-auto text-gray-600">
-            <nav class="breadcrumb flex items-center space-x-2 text-sm">
-                <a href="#" class="text-blue-600">Home</a>
+            <nav class="breadcrumb">
+                <a href="#">Home</a>
                 <span>/</span>
-                <a href="#" class="text-blue-600">Software Solutions</a>
+                <a href="#">Software Solutions</a>
                 <span>/</span>
                 <span>jmscarl</span>
             </nav>
@@ -106,22 +111,13 @@
     </div>
 
     <!-- Hero Section with New Year Countdown -->
-    <section class="bg-blue-600 text-white py-16 text-center relative">
+    <section class="bg-blue-600 text-white py-16 text-center">
         <h1 class="text-4xl font-bold mb-4">Welcome to jmscarl</h1>
         <p class="text-xl mb-6">Innovative software solutions for businesses and individuals</p>
-        <div id="countdown" class="time mb-6">
+        <div id="countdown" class="countdown mb-6">
             <!-- Countdown will appear here -->
         </div>
         <a href="#services" class="bg-white text-blue-600 py-2 px-6 rounded-full text-lg">Explore Our Services</a>
-
-        <!-- Fireworks Container -->
-        <div id="fireworks"></div>
-        
-        <!-- Happy New Year Message -->
-        <div id="happy-message">
-            <div id="country-message"></div>
-            <p>🎉 Wishing you a prosperous and successful year ahead! 🎆</p>
-        </div>
     </section>
 
     <!-- Services Section -->
@@ -170,9 +166,7 @@
 
             if (timeRemaining <= 0) {
                 document.getElementById('countdown').innerHTML = "Happy New Year!";
-                document.getElementById('happy-message').style.display = "block";
-                startFireworks();
-                displayCountryMessage();
+                // Show Fireworks (Optional: You can integrate a Fireworks library for effects)
                 return;
             }
 
@@ -188,44 +182,8 @@
             `;
         }
 
-        // Start fireworks effect
-        function startFireworks() {
-            const fireworks = new Fireworks.default();
-            fireworks.start();
-        }
-
-        // Display Happy New Year message based on the country
-        function displayCountryMessage() {
-            const countries = {
-                "US": "Happy New Year!",
-                "PH": "Maligayang Bagong Taon!",
-                "ES": "¡Feliz Año Nuevo!",
-                "FR": "Bonne année!",
-                "DE": "Frohes Neues Jahr!",
-                "IT": "Buon Anno!"
-            };
-
-            const userCountry = "US"; // Change this or use geolocation to dynamically set the country
-            const message = countries[userCountry] || "Happy New Year!";
-
-            document.getElementById('country-message').innerText = message;
-        }
-
         // Update the countdown every second
         setInterval(updateCountdown, 1000);
-
-        // Hide navbar when reaching footer (On Scroll)
-        window.onscroll = function() {
-            const navbar = document.querySelector('.navbar');
-            const footer = document.querySelector('footer');
-            const footerTop = footer.getBoundingClientRect().top;
-            
-            if (footerTop < window.innerHeight) {
-                navbar.style.top = "-60px";  // Hides navbar when reaching the footer
-            } else {
-                navbar.style.top = "0";  // Shows navbar when not reaching the footer
-            }
-        };
     </script>
 </body>
 </html>
