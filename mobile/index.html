@@ -14,6 +14,10 @@
     <!-- Font Awesome Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
+    <!-- Google AdSense Script -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+            crossorigin="anonymous"></script>
+
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -50,6 +54,18 @@
             background-color: #1E40AF;
             color: white;
             padding: 16px;
+        }
+
+        .ad-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        /* Mobile Styles */
+        @media (max-width: 768px) {
+            .ad-container {
+                margin: 10px 0;
+            }
         }
     </style>
 
@@ -108,6 +124,19 @@
             <span>/</span>
             <span>jmscarl</span>
         </div>
+    </div>
+
+    <!-- AdSense Advertisement -->
+    <div class="ad-container">
+        <!-- Google AdSense Ad Unit -->
+        <ins class="adsbygoogle"
+            style="display:block"
+            data-ad-client="ca-pub-1850340366909139"
+            data-ad-slot="1234567890" <!-- Replace with your Ad Slot ID -->
+            data-ad-format="auto"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
     </div>
 
     <!-- Countdown Section -->
