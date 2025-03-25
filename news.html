@@ -2,90 +2,92 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Latest News</title>
-
-    <!-- Bootstrap CSS -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SupreNews - Latest News</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- Google Fonts (Poppins) -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    
     <style>
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: "Poppins", sans-serif;
+            background-color: #f8f9fa;
         }
         .news-container {
             max-width: 900px;
-            margin: auto;
-            padding: 20px;
+            margin: 20px auto;
         }
-        .news-item {
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 15px;
-            margin-bottom: 15px;
+        .news-card {
+            margin-bottom: 20px;
         }
-        .news-item img {
-            max-width: 100%;
-            height: auto;
-            margin-bottom: 10px;
-        }
-        .news-item a {
-            text-decoration: none;
-            color: #007bff;
-        }
-        .news-item a:hover {
-            text-decoration: underline;
+        .news-card img {
+            max-height: 200px;
+            object-fit: cover;
         }
     </style>
 </head>
 <body>
 
-    <div class="news-container">
-        <h2 class="text-center mb-4">Latest News</h2>
-        <div id="news-container"></div>
+    <div class="container news-container">
+        <h1 class="text-center mt-4">SupreNews - Latest Headlines</h1>
+        <div id="news-list" class="mt-4"></div>
     </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            fetchNews();
-        });
+        const newsList = document.getElementById("news-list");
 
-        function fetchNews() {
-            const apiKey = "d2b2677dfe15ec3a45dc3982b0344fb6";
-            const url = `http://api.mediastack.com/v1/news?access_key=${apiKey}&countries=ph&limit=5`;
+        // API Keys
+        const apiKey1 = "3c78b2bb7cc143de9974c08d3a17357d"; // NewsAPI
+        const apiKey2 = "d2b2677dfe15ec3a45dc3982b0344fb6"; // Mediastack
 
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    const newsContainer = document.getElementById("news-container");
-                    newsContainer.innerHTML = ""; // Clear previous news
+        // API URLs
+        const newsAPI_URL = `https://newsapi.org/v2/top-headlines?country=ph&apiKey=${apiKey1}`;
+        const mediastack_URL = `https://api.mediastack.com/v1/news?access_key=${apiKey2}&countries=ph&limit=5`;
 
-                    if (data.data.length === 0) {
-                        newsContainer.innerHTML = "<p>No news available at the moment.</p>";
-                        return;
-                    }
+        async function fetchNews() {
+            try {
+                // Fetch from both APIs
+                const [newsApiResponse, mediastackResponse] = await Promise.all([
+                    fetch(newsAPI_URL).then(res => res.json()),
+                    fetch(mediastack_URL).then(res => res.json())
+                ]);
 
-                    data.data.forEach(news => {
-                        const newsHTML = `
-                            <div class="news-item">
-                                <img src="${news.image ? news.image : 'https://via.placeholder.com/800x400?text=No+Image'}" alt="News Image">
-                                <h5>${news.title}</h5>
-                                <p>${news.description ? news.description : 'No description available.'}</p>
-                                <a href="${news.url}" target="_blank" class="btn btn-primary btn-sm">Read more</a>
+                let articles = [];
+
+                // Merge results from both APIs
+                if (newsApiResponse.articles) {
+                    articles = articles.concat(newsApiResponse.articles);
+                }
+                if (mediastackResponse.data) {
+                    articles = articles.concat(mediastackResponse.data);
+                }
+
+                if (articles.length === 0) {
+                    newsList.innerHTML = "<p class='text-center'>No news available at the moment.</p>";
+                    return;
+                }
+
+                // Display news
+                articles.forEach(article => {
+                    const { title, description, url, urlToImage, image, source } = article;
+                    const newsItem = `
+                        <div class="card news-card">
+                            ${urlToImage || image ? `<img src="${urlToImage || image}" class="card-img-top" alt="News Image">` : ""}
+                            <div class="card-body">
+                                <h5 class="card-title">${title}</h5>
+                                <p class="card-text">${description ? description : "No description available."}</p>
+                                <p class="text-muted">Source: ${source?.name || "Unknown"}</p>
+                                <a href="${url}" target="_blank" class="btn btn-primary">Read More</a>
                             </div>
-                        `;
-                        newsContainer.innerHTML += newsHTML;
-                    });
-                })
-                .catch(error => {
-                    console.error("Error fetching news:", error);
-                    document.getElementById("news-container").innerHTML = "<p>Error loading news. Please try again later.</p>";
+                        </div>
+                    `;
+                    newsList.innerHTML += newsItem;
                 });
+
+            } catch (error) {
+                console.error("Error fetching news:", error);
+                newsList.innerHTML = "<p class='text-danger'>Failed to load news. Please try again later.</p>";
+            }
         }
+
+        fetchNews();
     </script>
 
 </body>
