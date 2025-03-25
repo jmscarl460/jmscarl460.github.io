@@ -153,38 +153,37 @@
 
     <!-- News Fetching Script -->
     <script>
-        let page = 1;
-        const apiKey = "d2b2677dfe15ec3a45dc3982b0344fb6";
-        const apiUrl = `http://api.mediastack.com/v1/news?access_key=${apiKey}&countries=ph&languages=en&limit=5`;
+document.addEventListener("DOMContentLoaded", function () {
+    const newsContainer = document.getElementById("news");
 
-        async function fetchNews(loadMore = false) {
-            try {
-                const response = await fetch(`${apiUrl}&offset=${(page - 1) * 5}`);
-                const data = await response.json();
-                const newsContainer = document.getElementById('news-container');
-
-                if (!loadMore) newsContainer.innerHTML = ''; 
-
-                data.data.forEach(article => {
-                    const newsItem = `
-                        <div class="news-card mb-3 p-3 border rounded">
-                            <h5>${article.title}</h5>
-                            <p>${article.description || 'No description available.'}</p>
-                            <a href="${article.url}" class="btn btn-primary" target="_blank">Read More</a>
+    fetch("http://api.mediastack.com/v1/news?access_key=d2b2677dfe15ec3a45dc3982b0344fb6&countries=ph&limit=5")
+    .then(response => response.json())
+    .then(data => {
+        if (data && data.data) {
+            let newsHTML = "";
+            data.data.forEach(news => {
+                newsHTML += `
+                    <div class="col-md-4">
+                        <div class="card">
+                            <img src="${news.image ? news.image : 'assets/default-news.jpg'}" class="card-img-top" alt="News Image">
+                            <div class="card-body">
+                                <h5 class="card-title">${news.title}</h5>
+                                <p class="card-text">${news.description ? news.description : 'No description available.'}</p>
+                                <a href="${news.url}" target="_blank" class="btn btn-primary">Read More</a>
+                            </div>
                         </div>
-                    `;
-                    newsContainer.innerHTML += newsItem;
-                });
-
-                page++; 
-            } catch (error) {
-                console.error('Error fetching news:', error);
-            }
+                    </div>`;
+            });
+            newsContainer.innerHTML = newsHTML;
+        } else {
+            newsContainer.innerHTML = "<p>No news available.</p>";
         }
-
-        document.getElementById('loadMoreBtn').addEventListener('click', () => fetchNews(true));
-
-        fetchNews();
+    })
+    .catch(error => {
+        console.error("Error fetching news:", error);
+        newsContainer.innerHTML = "<p>Failed to load news.</p>";
+    });
+});
     </script>
 
 </body>
