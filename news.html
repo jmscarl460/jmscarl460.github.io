@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Latest News</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts (Poppins) -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .news-container {
+            max-width: 900px;
+            margin: auto;
+            padding: 20px;
+        }
+        .news-item {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+        .news-item img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+        }
+        .news-item a {
+            text-decoration: none;
+            color: #007bff;
+        }
+        .news-item a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="news-container">
+        <h2 class="text-center mb-4">Latest News</h2>
+        <div id="news-container"></div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            fetchNews();
+        });
+
+        function fetchNews() {
+            const apiKey = "d2b2677dfe15ec3a45dc3982b0344fb6";
+            const url = `http://api.mediastack.com/v1/news?access_key=${apiKey}&countries=ph&limit=5`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const newsContainer = document.getElementById("news-container");
+                    newsContainer.innerHTML = ""; // Clear previous news
+
+                    if (data.data.length === 0) {
+                        newsContainer.innerHTML = "<p>No news available at the moment.</p>";
+                        return;
+                    }
+
+                    data.data.forEach(news => {
+                        const newsHTML = `
+                            <div class="news-item">
+                                <img src="${news.image ? news.image : 'https://via.placeholder.com/800x400?text=No+Image'}" alt="News Image">
+                                <h5>${news.title}</h5>
+                                <p>${news.description ? news.description : 'No description available.'}</p>
+                                <a href="${news.url}" target="_blank" class="btn btn-primary btn-sm">Read more</a>
+                            </div>
+                        `;
+                        newsContainer.innerHTML += newsHTML;
+                    });
+                })
+                .catch(error => {
+                    console.error("Error fetching news:", error);
+                    document.getElementById("news-container").innerHTML = "<p>Error loading news. Please try again later.</p>";
+                });
+        }
+    </script>
+
+</body>
+</html>
